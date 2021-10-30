@@ -5,6 +5,9 @@
 #include <map>
 #include <vector>
 #include <string>
+#include <codecvt>
+#include <utility>
+#include <locale>
 #include <limits>
 
 const std::map<std::string, std::vector<std::string>> range = {
@@ -59,16 +62,13 @@ const std::map<std::string, std::vector<std::string>> range = {
 };
 
 int main(){
-    std::string value = "17189b1125eaf176e1956824cafb1075";
+    std::string value = "0000005ec43798404240e1f700343445";
     std::string fileName = "";
     //std::string value;
     //std::cin >> value;
-    std::string right, left;
     for (auto i = range.begin(); i != range.end(); ++i){
         if ((value >= i->second[0]) && (value <= i->second[1])){
             fileName = i->first;
-            right = i->second[1];
-            left = i->second[0];
             break;
         }
     }
@@ -80,31 +80,43 @@ int main(){
     assert(file.is_open());
     bool flag = false;
     int a = 0, b = 1000001, c = b/2;
-    std::string middle, result, line;
+    std::string middle, line;
+    std::wstring_convert<std::codecvt_utf8_utf16<char16_t>, char16_t> convert;
+    std::u16string line_u16;
+    std::string result;
+    auto read_pos = file.tellg(), average = file.tellg();
     while(!flag){
         if (c == a){
             break;
         }
-        file.seekg(std::ios::beg);
-        for(int i = 0; i < c - 1; ++i){
+        file.seekg(read_pos);
+        for(int i = a; i < c - 1; ++i){
             file.ignore(std::numeric_limits<std::streamsize>::max(),'\n');
         }
         std::getline(file, line);
-        middle = line.substr(1, 32);
-        //std::cout << middle;
+        average = file.tellg();
+        line_u16 = convert.from_bytes(line);
+        middle = convert.to_bytes(line_u16.substr(line_u16.find_first_not_of('\"'), 32));
+        std::cout << middle << " : " << line;
         if (value.compare(middle) < 0){
-            left = middle;
-            b = c;
+            b = c;  
         }
         else if(value.compare(middle) == 0){
             flag = true;
-            result = line.substr(36, line.find_last_not_of('"') - 1);
+            //иначе не убирается конечная "
+            //std::wstring_convert<std::codecvt_utf8_utf16<char16_t>, char16_t> convert;
+            //std::u16string line_u16 = convert.from_bytes(line);
+            line_u16 = line_u16.substr(34, line_u16.size() - 35);
+            line_u16 = line_u16.substr(line_u16.find_first_of('\"') + 1, line_u16.size() - line_u16.find_first_of('\"') - 1);
+            result = convert.to_bytes(line_u16);
+            //result = result.substr(result.find_first_not_of('\"'), result.find__not_of('\"'));
+            //result = line.substr(36, line.find_last_not_of('\"') - 35);
         }
         else{
-            right = middle;
             a = c;
+            read_pos = average;
         }
-        //std::cout << " " << c << std::endl;
+        std::cout << " " << c << std::endl;
         c = (b - a) / 2 + a;
     }
     if (flag) {
