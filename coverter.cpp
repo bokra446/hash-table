@@ -91,7 +91,7 @@ int main(){
         }
         std::getline(file, line);
         middle = line.substr(1, 32);
-        std::cout << middle;
+        //std::cout << middle;
         if (value.compare(middle) < 0){
             left = middle;
             b = c;
@@ -104,7 +104,7 @@ int main(){
             right = middle;
             a = c;
         }
-        std::cout << " " << c << std::endl;
+        //std::cout << " " << c << std::endl;
         c = (b - a) / 2 + a;
     }
     if (flag) {
