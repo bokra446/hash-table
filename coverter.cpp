@@ -97,7 +97,7 @@ int main(){
         average = file.tellg();
         line_u16 = convert.from_bytes(line);
         middle = convert.to_bytes(line_u16.substr(line_u16.find_first_not_of('\"'), 32));
-        std::cout << middle << " : " << line;
+        //std::cout << middle << " : " << line;
         if (value.compare(middle) < 0){
             b = c;  
         }
@@ -116,7 +116,7 @@ int main(){
             a = c;
             read_pos = average;
         }
-        std::cout << " " << c << std::endl;
+        //std::cout << " " << c << std::endl;
         c = (b - a) / 2 + a;
     }
     if (flag) {
