@@ -62,7 +62,7 @@ const std::map<std::string, std::vector<std::string>> range = {
 };
 
 int main(){
-    std::string value = "0000005ec43798404240e1f700343445";
+    std::string value = "fffffe7f65e2dce722f279e4573310cb";
     std::string fileName = "";
     //std::string value;
     //std::cin >> value;
@@ -79,7 +79,9 @@ int main(){
     std::ifstream file(fileName);
     assert(file.is_open());
     bool flag = false;
-    int a = 0, b = 1000001, c = b/2;
+    int a = 0, b = 1000001;
+    if (fileName == "Audero-MD5-Rainbow-Table/md5_rainbow_table_part_12.csv") b = 110098;
+    int c = b / 2;
     std::string middle, line;
     std::wstring_convert<std::codecvt_utf8_utf16<char16_t>, char16_t> convert;
     std::u16string line_u16;
